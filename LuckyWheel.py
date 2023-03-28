@@ -1,5 +1,5 @@
 import sys
-from PyQt5.QtGui import QFont, QPalette, QColor
+from PyQt5.QtGui import QFont, QPalette, QColor, QPixmap
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QVBoxLayout, QHBoxLayout, QSizePolicy, QWidget
 from PyQt5.QtCore import QTimer, Qt
 import configparser
@@ -22,9 +22,7 @@ class MainWindow(QMainWindow):
         key_weights = self.weights = [float(config['NumberWeights'][x]) for x in self.results]
 
         self.numbers = key_value
-        print('self.numbers',self.numbers)
         self.weights = key_weights
-        print('self.weights', self.weights)
         
         self.label = QLabel(self)
         self.label.setAlignment(Qt.AlignCenter)
@@ -36,14 +34,25 @@ class MainWindow(QMainWindow):
         self.button.setFont(QFont("Arial", 18))
         self.button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         self.button.clicked.connect(self.on_button_click)
+        
+        self.quit_button = QPushButton("Quit", self)
+        self.quit_button.setStyleSheet("background-color: #FF5252; color: white;")
+        self.quit_button.setFont(QFont("Arial", 18))
+        self.quit_button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        self.quit_button.clicked.connect(QApplication.quit)
+
 
         vbox = QVBoxLayout()
         hbox = QHBoxLayout()
         hbox.addStretch()
         hbox.addWidget(self.label)
         hbox.addStretch()
+        
+        hbox_buttons = QHBoxLayout()
+        hbox_buttons.addWidget(self.button)
+        hbox_buttons.addWidget(self.quit_button)
         vbox.addLayout(hbox)
-        vbox.addWidget(self.button)
+        vbox.addLayout(hbox_buttons)
         
         central_widget = QWidget()
         central_widget.setLayout(vbox)
@@ -57,8 +66,8 @@ class MainWindow(QMainWindow):
         self.palette.setBrush(QPalette.Background, QColor("#ECEFF1"))
         self.setPalette(self.palette)
 
-        # self.icon = QPixmap("icon.jpg")
-        # self.setWindowIcon(self.icon)
+        pixmap = QPixmap("icon.jpg")
+        self.setWindowIcon(pixmap)
 
         self.setWindowTitle(text_title)
 
@@ -88,8 +97,7 @@ class MainWindow(QMainWindow):
 
         if len(self.results) >= 10:
             if result == str(self.weighted_random_choice(self.numbers, self.weights)):
-                # Dừng timer và hiển thị số đó lên giao diện người dùng
-                self.results = []  # Danh sách lưu các kết quả
+                self.results = []  
                 self.timer.stop()
                 self.label.setText(f"{text_value}{result}")
 
