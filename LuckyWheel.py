@@ -19,7 +19,6 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        self.results = []
         self.load_config()
         self.setup_ui()
         self.setup_events()
@@ -39,7 +38,7 @@ class MainWindow(QMainWindow):
         self.text_result = config['Config']['resultMessage']
         self.numbers = list(config['NumberWeights'].keys())
         self.weights = [float(config['NumberWeights'][x]) for x in self.numbers]
-        self.results = self.numbers
+        self.results = []
 
     def setup_ui(self):
         self.label = QLabel(self)
